@@ -64,8 +64,22 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal server error");
 });
 
+// config database
+const sequelize = require("./services/database");
+
+const configDB = async () => {
+  try {
+    await sequelize.authenticate();
+
+    console.log("Database Connected.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+};
+configDB();
+
 // start the server
-const port = config.port || 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log("Server running on port", port);
 });
