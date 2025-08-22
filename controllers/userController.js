@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require("joi").extend(require("@joi/date"));
 const sequelize = require("sequelize");
 const User = require("../models/user");
 const helpers = require("../helpers");
@@ -22,11 +22,11 @@ module.exports = {
 
         helpers.response(res, "User found", { data: users });
       } else {
-        helpers.response(res, "User not found");
+        helpers.response(res, "User not found", {}, 404);
       }
     } catch (e) {
       logger.error("user list error:", e);
-      helpers.response(res, "Internal server error");
+      helpers.response(res, "Internal server error", {}, 500);
     }
   },
 
@@ -37,7 +37,7 @@ module.exports = {
         name: Joi.string().min(3).max(30).required(),
         email: Joi.string().email().required(),
         status: Joi.number().valid(1, 2).empty("").default(1),
-        dob: Joi.date().min("1970-01-01").max("2020-12-30").empty(""),
+        dob: Joi.date().format("YYYY-MM-DD").min("1970-01-01").max("2020-12-30").empty(""),
       })
         .unknown()
         .required();
@@ -71,7 +71,7 @@ module.exports = {
       }
     } catch (e) {
       logger.error("user create error:", e);
-      helpers.response(res, "Internal server error");
+      helpers.response(res, "Internal server error", {}, 500);
     }
   },
 
@@ -92,11 +92,11 @@ module.exports = {
 
         helpers.response(res, "User found", { data: user });
       } else {
-        helpers.response(res, "User not found");
+        helpers.response(res, "User not found", {}, 404);
       }
     } catch (e) {
       logger.error("user view error:", e);
-      helpers.response(res, "Internal server error");
+      helpers.response(res, "Internal server error", {}, 500);
     }
   },
 
@@ -107,7 +107,11 @@ module.exports = {
         name: Joi.string().min(3).max(30).empty(""),
         email: Joi.string().email().empty(""),
         status: Joi.number().valid(1, 2).empty(""),
-        dob: Joi.date().min("1970-01-01").max("2020-12-30").empty(""),
+        dob: Joi.date()
+          .format("YYYY-MM-DD")
+          .min("1970-01-01")
+          .max("2020-12-30")
+          .empty(""),
       })
         .or("name", "email", "status", "dob")
         .unknown()
@@ -151,7 +155,7 @@ module.exports = {
       }
     } catch (e) {
       logger.error("user update error:", e);
-      helpers.response(res, "Internal server error");
+      helpers.response(res, "Internal server error", {}, 500);
     }
   },
 
@@ -170,7 +174,7 @@ module.exports = {
       }
     } catch (e) {
       logger.error("user update error:", e);
-      helpers.response(res, "Internal server error");
+      helpers.response(res, "Internal server error", {}, 500);
     }
   },
 };

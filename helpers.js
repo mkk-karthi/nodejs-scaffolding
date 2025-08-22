@@ -6,7 +6,7 @@ module.exports = {
     res.status(code).json({
       code,
       message,
-      data,
+      ...data,
     });
   },
 

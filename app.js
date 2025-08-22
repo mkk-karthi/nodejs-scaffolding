@@ -3,7 +3,13 @@ const config = require("./config");
 const app = express();
 
 // setup dotenv
-require("dotenv").config();
+if (process.env.NODE_ENV === "test") {
+  require("dotenv").config({
+    path: "./.env.test",
+  });
+} else {
+  require("dotenv").config();
+}
 
 // set static public path
 app.use("/public", express.static("public"));
@@ -43,8 +49,7 @@ app.use((req, res, next) => {
     method: method,
     url: url,
     ip: ip,
-    statusCode: res.statusCode,
-    data: res.data,
+    statusCode: res.statusCode
   });
 });
 
@@ -73,21 +78,4 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal server error");
 });
 
-// config database
-const sequelize = require("./services/database");
-const configDB = async () => {
-  try {
-    await sequelize.authenticate();
-
-    logger.info("Database Connected.");
-  } catch (error) {
-    logger.error("Unable to connect to the database:", error);
-  }
-};
-configDB();
-
-// start the server
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log("Server running on port", port);
-});
+module.exports = app;
