@@ -1,5 +1,5 @@
 module.exports = {
-  appName: "Express.js",
+  appName: "Microservices in Express.js",
   rateLimit: {
     maxReq: 100,
     maxMin: 15,

@@ -23,7 +23,9 @@
     "joi": "^18.0.0",
     "mysql2": "^3.14.3",
     "pm2": "^6.0.8",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "engines": {
     "node": ">=20.0.0",

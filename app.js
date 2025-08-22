@@ -42,6 +42,10 @@ app.use((req, res, next) => {
   console.log(`Response status: ${res.statusCode}`);
 });
 
+// config swagger
+const { swaggerUi, swaggerSpec } = require("./lib/swagger");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // config cors
 const cors = require("cors");
 const whiteList = ["localhost:8080"];
