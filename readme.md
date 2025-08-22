@@ -1,4 +1,4 @@
-# Node.js Scaffolding Project (Microservice Architecture)
+# Node.js Scaffolding (Microservice Architecture)
 
 A Node.js scaffolding project with **microservice architecture** supporting **User CRUD operations**.  
 It uses **Sequelize ORM** for database management with migrations and seeders, along with modern tooling for security, logging, API documentation, and testing.
