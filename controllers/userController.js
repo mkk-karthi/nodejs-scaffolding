@@ -2,6 +2,7 @@ const Joi = require("joi");
 const sequelize = require("sequelize");
 const User = require("../models/user");
 const helpers = require("../helpers");
+const logger = require("../libs/logger");
 
 module.exports = {
   async list(req, res) {
@@ -24,7 +25,7 @@ module.exports = {
         helpers.response(res, "User not found");
       }
     } catch (e) {
-      console.error("user list error:", e);
+      logger.error("user list error:", e);
       helpers.response(res, "Internal server error");
     }
   },
@@ -69,7 +70,7 @@ module.exports = {
         }
       }
     } catch (e) {
-      console.error("user create error:", e);
+      logger.error("user create error:", e);
       helpers.response(res, "Internal server error");
     }
   },
@@ -94,7 +95,7 @@ module.exports = {
         helpers.response(res, "User not found");
       }
     } catch (e) {
-      console.error("user view error:", e);
+      logger.error("user view error:", e);
       helpers.response(res, "Internal server error");
     }
   },
@@ -149,7 +150,7 @@ module.exports = {
         }
       }
     } catch (e) {
-      console.error("user update error:", e);
+      logger.error("user update error:", e);
       helpers.response(res, "Internal server error");
     }
   },
@@ -168,7 +169,7 @@ module.exports = {
         helpers.response(res, "User not deleted", {}, 404);
       }
     } catch (e) {
-      console.error("user update error:", e);
+      logger.error("user update error:", e);
       helpers.response(res, "Internal server error");
     }
   },

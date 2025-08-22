@@ -32,26 +32,31 @@ app.use(
 );
 
 // setup logger middleware
+const logger = require("./libs/logger");
 app.use((req, res, next) => {
-  console.log(
-    `Incoming request: ${req.method} ${req.url} Body: ${JSON.stringify(
-      req.body ?? []
-    )}`
-  );
+  req.logger = logger;
+  const { method, url, ip } = req;
+
   next();
-  console.log(`Response status: ${res.statusCode}`);
+
+  logger.info("Request received", {
+    method: method,
+    url: url,
+    ip: ip,
+    statusCode: res.statusCode,
+    data: res.data,
+  });
 });
 
 // config swagger
-const { swaggerUi, swaggerSpec } = require("./lib/swagger");
+const { swaggerUi, swaggerSpec } = require("./libs/swagger");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // config cors
 const cors = require("cors");
-const whiteList = ["localhost:8080"];
 const corsOptions = {
   origin: function (origin, callback) {
-    if (whiteList.includes(origin)) {
+    if (config.whiteListOrigins && config.whiteListOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(null, false);
@@ -64,20 +69,19 @@ app.use("/", cors(corsOptions), router);
 
 // error handling middleware
 app.use((err, req, res, next) => {
-  console.error("Express error:", err);
+  logger.error("Express error:", err);
   res.status(500).send("Internal server error");
 });
 
 // config database
 const sequelize = require("./services/database");
-
 const configDB = async () => {
   try {
     await sequelize.authenticate();
 
-    console.log("Database Connected.");
+    logger.info("Database Connected.");
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    logger.error("Unable to connect to the database:", error);
   }
 };
 configDB();
