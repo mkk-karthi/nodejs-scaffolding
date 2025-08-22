@@ -9,7 +9,7 @@
     "start": "pm2 start index.js",
     "dev": "nodemon index.js",
     "db:migrate": "node migrate.js",
-    "db:rollback": "node migrate.js rollback",
+    "db:refresh": "node migrate.js refresh",
     "db:seed": "node seeder.js"
   },
   "author": "",
