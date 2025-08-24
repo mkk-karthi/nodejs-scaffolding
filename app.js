@@ -38,7 +38,7 @@ app.use(
 );
 
 // setup logger middleware
-const logger = require("./libs/logger");
+const logger = require("./services/logger");
 app.use((req, res, next) => {
   req.logger = logger;
   const { method, url, ip } = req;
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
 });
 
 // config swagger
-const { swaggerUi, swaggerSpec } = require("./libs/swagger");
+const { swaggerUi, swaggerSpec } = require("./services/swagger");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // config cors
@@ -75,7 +75,7 @@ app.use("/", cors(corsOptions), router);
 // error handling middleware
 app.use((err, req, res, next) => {
   logger.error("Express error:", err);
-  res.status(500).send("Internal server error");
+  helpers.response(res, "Internal server error", {}, 500);
 });
 
 module.exports = app;

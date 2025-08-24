@@ -2,7 +2,7 @@ const Joi = require("joi").extend(require("@joi/date"));
 const sequelize = require("sequelize");
 const User = require("../models/user");
 const helpers = require("../helpers");
-const logger = require("../libs/logger");
+const logger = require("../services/logger");
 
 module.exports = {
   async list(req, res) {
@@ -59,8 +59,8 @@ module.exports = {
         let user = await User.create({
           name: value.name,
           email: value.email,
-          status: value.status,
           dob: value.dob,
+          status: value.status,
         });
 
         if (user) {
@@ -136,18 +136,18 @@ module.exports = {
             return;
           }
         }
-        // update user
-        let user = await User.update(
-          {
-            name: value.name,
-            email: value.email,
-            status: value.status,
-            dob: value.dob,
-          },
-          { where: { id } }
-        );
+        
+        let input = {
+          name: value.name,
+          email: value.email,
+        };
+        if (value.status) input["status"] = value.status;
+        if (value.dob) input["dob"] = value.dob;
 
-        if (user[0] == 1) {
+        // update user
+        let updated = await User.update(input, { where: { id } });
+
+        if (updated[0] == 1) {
           helpers.response(res, "User updated");
         } else {
           helpers.response(res, "User not updated", {}, 404);
@@ -165,9 +165,9 @@ module.exports = {
       let id = helpers.decrypt(req.params.id);
 
       // delete user
-      let user = await User.destroy({ where: { id } });
+      let deleted = await User.destroy({ where: { id } });
 
-      if (user == 1) {
+      if (deleted == 1) {
         helpers.response(res, "User deleted");
       } else {
         helpers.response(res, "User not deleted", {}, 404);

@@ -4,3 +4,4 @@ node_modules/
 storage/uploads/
 storage/logs/
 coverage/
+.env.test
